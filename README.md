@@ -18,9 +18,8 @@ TODO:
 - [x] setup repo
 - [x] include last paymaster and escrow contracts
 - [x] create todo
-- [ ] import supporting files
-- [ ] create simple tokens with drip function
-- [ ] create test drip script
+- [x] import supporting files
+- [x] create simple tokens with drip function
 - [ ] create drip contract 1271 
 - [ ] script test tokens
 - [ ] script test drip
