@@ -1,4 +1,4 @@
-need to deploy on
+Possible Testnets
 
 | Company   | Testnet            | ChainId   | RPC                                 | Explorer                                      | Currency | Faucet |
 |-----------|--------------------|-----------|-------------------------------------|------------------------------------------------|----------|--------|
@@ -13,3 +13,17 @@ need to deploy on
 | Polygon   | Polygon ZKGoreli   | 1442      | https://rpc.public.zkevm-test.net   | https://testnet-zkevm.polygonscan.com          | MATIC    |        |
 | Scroll    | Scroll Sepolia Testnet | 534351 | https://sepolia-rpc.scroll.io/      | https://sepolia-blockscout.scroll.io/          | ETH      |        |
 | Arbitrum | Arbitrum Sepolia | 421614 | https://sepolia-rollup.arbitrum.io/rpc | https://sepolia.arbiscan.io | ETH | |
+
+TODO:
+- [x] setup repo
+- [x] include last paymaster and escrow contracts
+- [x] create todo
+- [ ] import supporting files
+- [ ] create simple tokens with drip function
+- [ ] create test drip script
+- [ ] create drip contract 1271 
+- [ ] script test tokens
+- [ ] script test drip
+- [ ] deploy tokens
+- [ ] deploy drip
+- [ ] script deploy uniswapv2 and fund
