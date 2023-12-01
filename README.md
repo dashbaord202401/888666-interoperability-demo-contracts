@@ -20,7 +20,7 @@ TODO:
 - [x] create todo
 - [x] import supporting files
 - [x] create simple tokens with drip function
-- [ ] create drip contract 1271 
+- [x] create drip contract 1271 
 - [ ] script test tokens
 - [ ] script test drip
 - [ ] deploy tokens
