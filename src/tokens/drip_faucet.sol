@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity^0.8.13;
+pragma solidity^0.8.13.0;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
@@ -12,9 +12,7 @@ contract DripFaucet is Ownable {
   uint256 _drip;
   uint256 _timelock;
 
-  constructor(uint256 drip) {
-    _drip = drip;
-  }
+  constructor() payable {}
 
   mapping(address => bool) public isAuthorized;
   mapping(address => uint256) public lastClaim;
@@ -26,27 +24,35 @@ contract DripFaucet is Ownable {
     _isLock = false;
   }
 
-  function generateHash(address to, uint256 amount) public view returns(bytes32) {
-    return keccak256(abi.encode(to, amount, block.chainid));
+  function generateHash(address to) public view returns(bytes32) {
+    return keccak256(abi.encode(to, _drip, address(this), block.chainid));
   }
 
-  function dripTokens(address to, uint256 amount, bytes calldata signature) noReentry public {
+  function dripTokens(address to, bytes calldata signature) noReentry public {
     require(isAuthorized[msg.sender], "Invalid isAuthorized");
-    require(block.timestamp - lastClaim[to] > _timelock);
+    require((block.timestamp - lastClaim[to]) > _timelock, "already claimed");
     lastClaim[to] = block.timestamp;
 
-    bytes32 hash_ = generateHash(to, amount);
+    bytes32 hash_ = generateHash(to);
     (address recovered, ECDSA.RecoverError error) = ECDSA.tryRecover(hash_.toEthSignedMessageHash(), signature);
     if (error != ECDSA.RecoverError.NoError) {
       revert BadSignature();
     }
 
     if (recovered != to) {
-      revert BadSignature();
+      revert FailedSignature(recovered, to);
     }
 
-    (bool success,) = payable(to).call{value: amount}("");
+    (bool success,) = payable(to).call{value: _drip}("");
     require(success, "drip failed");
+  }
+
+  function setDrip(uint256 val) onlyOwner public {
+    _drip = val;
+  }
+
+  function setTimelock(uint256 val) onlyOwner public {
+    _timelock = val;
   }
 
   function getBalance() public view returns(uint256) {
@@ -65,6 +71,7 @@ contract DripFaucet is Ownable {
   // add claim time to contract
 
   error BadSignature();
+  error FailedSignature(address given, address expected);
 
   receive() external payable {}
 }

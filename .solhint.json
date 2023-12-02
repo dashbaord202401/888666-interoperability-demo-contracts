@@ -12,6 +12,7 @@
     "no-inline-assembly": "off",
     "check-send-result": "off",
     "visibility-modifier-order": "off",
-    "not-rely-on-time": "off"
+    "not-rely-on-time": "off",
+    "no-empty-blocks": "off"
   }
 }

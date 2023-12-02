@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.17.0;
 
 //import {IMailbox, IIGP, TestPaymaster, IEntryPoint} from "flat/TestPaymaster2_f.sol";
 //import "contracts/interfaces/ITestEscrow.sol";
@@ -10,12 +10,12 @@ import {LoadKey} from "test/base/loadkey.t.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import {IEntryPoint, EntryPoint, IAccount, UserOperation, UserOperationLib} from "@4337/core/entryPoint.sol";
 import {SimpleAccount, SimpleAccountFactory} from "@4337/samples/SimpleAccountFactory.sol";
-import {TestPaymaster, IMailbox, IIGP} from "contracts/TestPaymaster.sol";
-import {TestEscrow} from "contracts/TestEscrow.sol";
-import {PaymasterAndData, PaymasterAndData2} from "contracts/interfaces/ITestEscrow.sol";
-import {HyperlaneMailbox} from "contracts/test/HyperlaneMailbox.sol";
-import {HyperlaneIGP} from "contracts/test/HyperlaneIGP.sol"; 
-import {Token} from "contracts/test/ERC20.sol";
+import {TestPaymaster, IMailbox, IIGP} from "src/TestPaymaster.sol";
+import {TestEscrow} from "src/TestEscrow.sol";
+import {PaymasterAndData, PaymasterAndData2} from "src/interfaces/ITestEscrow.sol";
+import {HyperlaneMailbox} from "src/test/HyperlaneMailbox.sol";
+import {HyperlaneIGP} from "src/test/HyperlaneIGP.sol"; 
+import {Token} from "src/test/ERC20.sol";
 
 /**
 What I need

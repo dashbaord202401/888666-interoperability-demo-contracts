@@ -22,7 +22,7 @@ TODO:
 - [x] create simple tokens with drip function
 - [x] create drip contract 1271 
 - [ ] script test tokens
-- [ ] script test drip
+- [x] script test drip
 - [ ] deploy tokens
 - [ ] deploy drip
 - [ ] script deploy uniswapv2 and fund
