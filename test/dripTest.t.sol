@@ -71,4 +71,8 @@ contract DripTest is LoadKey {
     _dripFaucet.withdraw();
   }
 
+  function testDrip2() public {
+    _tokenFaucet.mint(USER, 5);
+  }
+
 }
