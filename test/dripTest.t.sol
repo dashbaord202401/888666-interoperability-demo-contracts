@@ -67,6 +67,8 @@ contract DripTest is LoadKey {
     vm.expectRevert(); // timestamp error
     _dripFaucet.dripTokens(USER, signature);
     vm.stopPrank();
+
+    _dripFaucet.withdraw();
   }
 
 }
