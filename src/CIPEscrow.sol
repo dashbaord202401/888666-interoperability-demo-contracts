@@ -5,9 +5,9 @@ import {UserOperation, UserOperationLib} from "lib/account-abstraction/contracts
 import {Ownable} from "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 import {Strings} from "lib/openzeppelin-contracts/contracts/utils/Strings.sol";
 import {ECDSA} from "lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol";
-import {Payment, PaymasterAndData, PaymasterAndData2, ITestEscrow} from "./interfaces/ITestEscrow.sol";
+import {Payment, PaymasterAndData, PaymasterAndData2, ICIPEscrow} from "./interfaces/ICIPEscrow.sol";
 
-contract TestEscrow is Ownable, ITestEscrow {
+contract CIPEscrow is Ownable, ICIPEscrow {
     using UserOperationLib for UserOperation;
     using Strings for uint256;
     using ECDSA for bytes32;
@@ -336,3 +336,19 @@ contract TestEscrow is Ownable, ITestEscrow {
 
     fallback() external payable {}
 }
+/**
+contract flow:
+add funds to escrow
+lock time in escrow
+create request to swap, call0
+create call to wallet, call1
+create call to entrypoint, call2
+exe call2 which called call1 which called call0
+
+
+if the goal is to have funds on the origin chain
+the escrow will be at the origin chain
+which means the dest chain the relay is the tx.origin
+whcih means the contract must ensure that not the paymaster is paid but the bundler (relay)
+
+ */

@@ -32,7 +32,7 @@ interface IIGP {
 // chainid == block.chainid
 // validateSignature == owner
 // transfer amount to paymaster 
-contract TestPaymaster is BasePaymaster {
+contract CIPPaymaster is BasePaymaster {
     mapping(uint256 => address) public escrowAddress;
     mapping(uint256 => bool) public acceptedChain; // destinationDomain
     mapping(uint256 => mapping(address => bool)) public acceptedAsset;
@@ -142,11 +142,12 @@ contract TestPaymaster is BasePaymaster {
         // require(depositInfo_.deposit >= 0.2 ether);
         entryPoint.withdrawTo(payable(address(this)), 0.2 ether);
 
-        address receiver = escrowAddress[destinationDomain_] != address(0) ? escrowAddress[destinationDomain_] : address(this);
+        //address receiver = escrowAddress[destinationDomain_] != address(0) ? escrowAddress[destinationDomain_] : address(this);
+        address receiver = tx.origin;
         bytes32 recipientAddress_ = bytes32(uint256(uint160(receiver)));
         IMailbox(hyperlane_mailbox).dispatch(destinationDomain_, recipientAddress_, abi.encode(userOp, receiver));
-        IIGP(hyperlane_igp).quoteGasPayment(destinationDomain_, gasAmount_);
-        context = abi.encode(messageId_, destinationDomain_, gasAmount_);
+        uint256 igpQuote_ = IIGP(hyperlane_igp).quoteGasPayment(destinationDomain_, gasAmount_);
+        context = abi.encode(receiver, messageId_, destinationDomain_, gasAmount_, igpQuote_);
     }}
 
     function _postOp(PostOpMode mode, bytes calldata context, uint256 actualGasCost) internal override {
@@ -155,14 +156,17 @@ contract TestPaymaster is BasePaymaster {
         bytes32 messageId_;
         uint32 destinationDomain_;
         uint256 gasAmount_;
+        uint256 igpQuote_;
         address refundAddress_;
-        (messageId_, destinationDomain_, gasAmount_) = abi.decode(context, (bytes32, uint32, uint256));
+        (refundAddress_, messageId_, destinationDomain_, gasAmount_, igpQuote_) = abi.decode(context, (address, bytes32, uint32, uint256, uint256));
         IIGP(hyperlane_igp).payForGas{value: address(this).balance}(
             messageId_,
             destinationDomain_,
             gasAmount_,
             address(this) // refundAddress_
         );
+
+        entryPoint.withdrawTo(payable(refundAddress_), gasAmount_ + igpQuote_);
     }
 
     receive() external payable {

@@ -30,8 +30,8 @@
 - [x] deploy drip
 - [x] uniswapv2 contracts
 - [x] uniswapv2 script
-- [ ] revise paymaster, for now paymaster paying is okay -> needs to be changed to bundler
-- [ ] revise escrow (just double check it works)
+- [x] revise paymaster, for now paymaster paying is okay -> needs to be changed to bundler
+- [x] revise escrow (just double check it works)
 - [ ] script uniswapv2 tx via etched validator
 - [ ] make paymaster upgradeable
 - [ ] make escrow upgradeable

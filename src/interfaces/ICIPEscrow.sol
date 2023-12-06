@@ -44,7 +44,7 @@ struct UserOperation {
     bytes signature;
 }
 
-interface ITestEscrow {
+interface ICIPEscrow {
 
     function interchainSecurityModule() external view returns(address);
     function getBalance(address account_, address asset_) external returns(uint256);
