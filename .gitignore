@@ -12,3 +12,4 @@ lib
 .deps
 package-lock.json
 yarn.lock
+deploy_commands

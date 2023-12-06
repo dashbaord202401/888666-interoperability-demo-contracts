@@ -98,9 +98,9 @@ contract TestPaymaster is BasePaymaster {
     internal
     override
     returns (bytes memory context, uint256 validationResult) {unchecked {
-        // if(!acceptedOrigin[tx.origin]) {
-        //     revert InvalidOrigin(tx.origin);
-        // } // will be using at some later point 
+        if(!acceptedOrigin[tx.origin]) {
+            revert InvalidOrigin(tx.origin);
+        } // will be using at some later point 
 
         //requiredPreFund is already subtracted from stake
 
@@ -178,3 +178,9 @@ contract TestPaymaster is BasePaymaster {
     error InvalidAsset(uint32 chainId, address asset);
     error InvalidDataLength(uint256 dataLength);
 }
+
+// bundler exe tx -> paymaster pasy for the tx -> bundler pays the paymaster -> bundler gets paid out on opposite chain from escrow
+// which means we need sufficent funds on the paymaster to cover the maximum possible cost of a tx
+// paymaster only accepts crosschain calls
+
+// technically I could just trust the bundler but this way both parties are safe

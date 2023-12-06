@@ -59,8 +59,6 @@ contract DripTest is LoadKey {
     console.log("eoaAddress", vm.toString(eoaAddress));
     console.log("eth message", vm.toString(hash_2.toEthSignedMessageHash()));
 
-    //1b2d79b044337845d80b892c79523d3a57fea5ce5898e280f6b2ef2769f79c99
-
     vm.startPrank(USER);
     vm.expectRevert(); // unauthorized
     _dripFaucet.dripTokens(USER, signature);
@@ -79,8 +77,8 @@ contract DripTest is LoadKey {
     // _dripFaucet.withdraw();
   }
 
-  // function testDrip2() public {
-  //   _tokenFaucet.mint(USER, 5);
-  // }
+  function testDrip2() public {
+    _tokenFaucet.mint(USER, 5);
+  }
 
 }
