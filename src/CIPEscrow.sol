@@ -14,9 +14,9 @@ contract CIPEscrow is Ownable, ICIPEscrow {
 
     mapping(address => Escrow) _accountInfo;
     mapping(uint256 => address) _entryPoint;
-    mapping(address => bool) ccipAddress;
-    mapping(address => bool) layerZeroAddress;
-    mapping(address => bool) hyperlaneAddress;
+    mapping(address => bool) _ccipAddress;
+    mapping(address => bool) _layerZeroAddress;
+    mapping(address => bool) _hyperlaneAddress;
     mapping(address => uint256) _escrowBalance;
 
     address public interchainSecurityModule;
@@ -57,15 +57,15 @@ contract CIPEscrow is Ownable, ICIPEscrow {
     }
 
     function addCCIPAddress(address ccip, bool state) public override onlyOwner {
-        ccipAddress[ccip] = state;
+        _ccipAddress[ccip] = state;
     } // supposedly we want to have one escrow for multiple oracle senders
 
     function addHyperlaneAddress(address hyperlane, bool state) public override onlyOwner {
-        hyperlaneAddress[hyperlane] = state;
+        _hyperlaneAddress[hyperlane] = state;
     }
 
-    function pack(UserOperation calldata userOp) internal pure returns (bytes memory ret) {
-        address sender = getSender(userOp);
+    function _pack(UserOperation calldata userOp) internal pure returns (bytes memory ret) {
+        address sender = _getSender(userOp);
         uint256 nonce = userOp.nonce;
         bytes32 hashInitCode = calldataKeccak(userOp.initCode);
         bytes32 hashCallData = calldataKeccak(userOp.callData);
@@ -86,7 +86,7 @@ contract CIPEscrow is Ownable, ICIPEscrow {
     }
 
     function hash(UserOperation calldata userOp) public pure returns (bytes32) {
-        return keccak256(pack(userOp));
+        return keccak256(_pack(userOp));
     }
 
     function calldataKeccak(bytes calldata data) override public pure returns (bytes32 ret) {
@@ -98,7 +98,7 @@ contract CIPEscrow is Ownable, ICIPEscrow {
         }
     }
 
-    function getSender(UserOperation calldata userOp) internal pure returns (address) {
+    function _getSender(UserOperation calldata userOp) internal pure returns (address) {
         address data;
         //read sender from userOp, which is first userOp member (saves 800 gas...)
         assembly {data := calldataload(userOp)}
@@ -236,7 +236,7 @@ contract CIPEscrow is Ownable, ICIPEscrow {
         bytes calldata message
         ) external {
 
-        if(!hyperlaneAddress[msg.sender]) {
+        if(!_hyperlaneAddress[msg.sender]) {
             revert InvalidHyperlaneAddress(msg.sender);
         }
 

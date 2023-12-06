@@ -36,7 +36,7 @@
 - [ ] make paymaster upgradeable
 - [ ] make escrow upgradeable
 - [ ] make faucet upgradeable
-- [ ] deploy paymaster and escrow
+- [x] deploy paymaster and escrow
 - [x] deploy uniswapv2
 - [ ] create Token and USDT pairs
 - [ ] fund Token and USDT tokens
@@ -46,6 +46,9 @@
 - [ ] script to test uniswapv4
 - [ ] script to test gearbox
 - [ ] add verify view function to drip
+- [ ] cleanup new paymaster/escrow (unused variables)
+- [ ] add 1271 to token escrow
+- [ ] add deployment costs to readme
 
 ### Faucets
 
@@ -68,4 +71,7 @@
 
 
 
-| Chain | Escrow | Paymaster
+| Chain            | Escrow                                 | Paymaster                              |
+|------------------|----------------------------------------|----------------------------------------|
+| Ethereum Sepolia | 0x4A3B53985D7993A09eD6144F456720153bF1fD40 | 0x7d4a0b3170BEa5B22A2A142DE0A67a3d92d0EB7D |
+| Polygon Mumbai   | 0x1A838bD66C52B1cFAF226727B262B84c6dA34011 | 0x977475D91CAD19f0980fE58bA7EC27E20fE8f451 |

@@ -296,7 +296,7 @@ What I need
         vm.deal(eoaAddress, 10 ether);
         vm.prank(eoaAddress);
         _cipEscrow.deposit{value: 5 ether}(eoaAddress, address(0), 5 ether);
-        uint256 oldDeadline = _cipEscrow.getDeadline(eoaAddress);
+        //uint256 oldDeadline = _cipEscrow.getDeadline(eoaAddress);
         bytes32 timeHash = _cipEscrow.hashSeconds(eoaAddress, 3600);
         (v, r, s) = vm.sign(privateKey, timeHash.toEthSignedMessageHash());
         bytes memory timeSignature = abi.encodePacked(r, s, v);
