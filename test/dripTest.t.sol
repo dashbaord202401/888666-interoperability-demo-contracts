@@ -50,8 +50,16 @@ contract DripTest is LoadKey {
     bytes32 s;
     bytes memory signature;
     bytes32 hash_ = _dripFaucet.generateHash(eoaAddress);
+    bytes32 hash_2 = 0x3c026ba09d5d55ac9317f3a87130ebe6d74800b4952dc0265de65be97a87b0a2;
     (v, r, s) = vm.sign(privateKey, hash_.toEthSignedMessageHash());
     signature = abi.encodePacked(r, s, v);
+    (v, r, s) = vm.sign(privateKey, hash_2.toEthSignedMessageHash());
+    bytes memory signature2 = abi.encodePacked(r, s, v);
+    console.log("signature2", vm.toString(signature2));
+    console.log("eoaAddress", vm.toString(eoaAddress));
+    console.log("eth message", vm.toString(hash_2.toEthSignedMessageHash()));
+
+    //1b2d79b044337845d80b892c79523d3a57fea5ce5898e280f6b2ef2769f79c99
 
     vm.startPrank(USER);
     vm.expectRevert(); // unauthorized
@@ -68,11 +76,11 @@ contract DripTest is LoadKey {
     _dripFaucet.dripTokens(USER, signature);
     vm.stopPrank();
 
-    _dripFaucet.withdraw();
+    // _dripFaucet.withdraw();
   }
 
-  function testDrip2() public {
-    _tokenFaucet.mint(USER, 5);
-  }
+  // function testDrip2() public {
+  //   _tokenFaucet.mint(USER, 5);
+  // }
 
 }

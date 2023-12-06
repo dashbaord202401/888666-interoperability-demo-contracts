@@ -30,11 +30,16 @@
 - [x] deploy drip
 - [x] uniswapv2 contracts
 - [ ] uniswapv2 script
+- [ ] revise paymaster
+- [ ] revise escrow
+- [ ] script uniswapv2 tx via etched validator
+- [ ] deploy paymaster and escrow
 - [ ] deploy uniswapv2 and fund
+- [ ] add verify view function to drip
 
 ### Faucets
 
 | Chain           | Drip Faucet                             | USDT                                   | Token                                 |
 |-----------------|-----------------------------------------|----------------------------------------|---------------------------------------|
 | Ethereum Sepolia| 0xa651484C43383f27ad98647ef434769796cC0Bc6 | 0x1448a1620170b28c561c41A7FAe5BEea71EFc7B9 | 0x50aB7C2597422ecc7083536dE93c5459E315CaC2 |
-| Polygon Mumbai  | 0xa651484C43383f27ad98647ef434769796cC0Bc6 | 0xEF4Ca181511EF094cb6e14439cf33868aed1875B | 0xaCB3bc70A807fa1F5f36c80C7C2c0402d9341D5B |
+| Polygon Mumbai  | 0xbD829426BF1c8A09C35F7d402D7a92894d22DC2F | 0xEF4Ca181511EF094cb6e14439cf33868aed1875B | 0xaCB3bc70A807fa1F5f36c80C7C2c0402d9341D5B |
