@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17.0;
 
-import "forge-std/Test.sol";
+import "lib/forge-std2/src/Test.sol";
 
  contract LoadKey is Test {
 

@@ -2,7 +2,7 @@
 pragma solidity ^0.8.15;
 
 import "test/base/loadkey.t.sol";
-import "lib/forge-std/src/console.sol";
+import "lib/forge-std2/src/console.sol";
 import {IEntryPoint} from "lib/account-abstraction/contracts/samples/SimpleAccountFactory.sol";
 import {CIPPaymaster} from "src/CIPPaymaster.sol";
 import {CIPEscrow} from "src/CIPEscrow.sol";

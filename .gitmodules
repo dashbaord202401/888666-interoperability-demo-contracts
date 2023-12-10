@@ -14,3 +14,7 @@
 	path = lib/account-abstraction
 	url = https://github.com/proofofsoulprotocol/account-abstraction
 	branch = ver0.6.0
+[submodule "lib/forge-std2"]
+	path = lib/forge-std2
+	url = https://github.com/foundry-rs/forge-std
+	branch = chore/bump-to-1.7.3

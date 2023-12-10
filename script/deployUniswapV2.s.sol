@@ -2,7 +2,7 @@
 pragma solidity ^0.8.15;
 
 import "test/base/loadkey.t.sol";
-import "lib/forge-std/src/console.sol";
+import "lib/forge-std2/src/console.sol";
 import {WETH9} from "src/tokens/WETH9.sol";
 import {UniswapV2Factory} from "src/tokens/UniswapV2Factory.sol";
 import {UniswapV2Pair} from "src/tokens/UniswapV2Pair.sol";

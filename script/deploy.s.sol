@@ -2,7 +2,7 @@
 pragma solidity ^0.8.15;
 
 import "../test/base/loadkey.t.sol";
-import "forge-std/console.sol";
+import "lib/forge-std2/src/console.sol";
 import {IEntryPoint, EntryPoint, IAccount, UserOperation, UserOperationLib} from "@4337/core/entryPoint.sol";
 import {SimpleAccount, SimpleAccountFactory} from "@4337/samples/SimpleAccountFactory.sol";
 

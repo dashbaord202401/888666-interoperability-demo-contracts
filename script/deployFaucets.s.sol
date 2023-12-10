@@ -2,7 +2,7 @@
 pragma solidity ^0.8.15;
 
 import "test/base/loadkey.t.sol";
-import "lib/forge-std/src/console.sol";
+import "lib/forge-std2/src/console.sol";
 import {DripFaucet} from "src/tokens/drip_faucet.sol";
 import {Token} from "src/tokens/ERC20.sol";
 
@@ -34,7 +34,7 @@ contract Deploy is LoadKey {
     _tokenFaucetAddress = address(_tokenFaucet);
 
     _dripFaucet.setAuthorized(FAUCET_RELAY, true);
-    _dripFaucet.setDrip(0.5 ether);
+    _dripFaucet.setDrip(0.1 ether);
     _dripFaucet.setTimelock(3600);
     vm.stopBroadcast();
   }
