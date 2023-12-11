@@ -8,7 +8,7 @@ import {UniswapV2Pair} from "src/tokens/UniswapV2Pair.sol";
 import {UniswapV2Router02} from "src/tokens/UniswapV2Router.sol";
 
 // Simple Account Wallet
-import "lib/forge-std/src/Test.sol";
+import {Test} from "lib/forge-std2/src/Test.sol";
 import {SimpleAccountFactory, SimpleAccount, IEntryPoint} from "lib/account-abstraction/contracts/samples/SimpleAccountFactory.sol";
 import {EntryPoint} from "lib/account-abstraction/contracts/core/EntryPoint.sol";
 import {BaseAccount, UserOperation} from "lib/account-abstraction/contracts/core/BaseAccount.sol";
@@ -17,41 +17,48 @@ import {ECDSA} from "lib/openzeppelin-contracts/contracts/utils/cryptography/ECD
 contract UniswapTest is Test {
   using ECDSA for bytes32;
 
-  EntryPoint public entryPoint;
-  address internal entryPointAddress;
+  EntryPoint _entryPoint;
 
   Token public token;
   WETH9 public weth;
-  address owner;
-  address user;
-  uint256[2] internal publicKey;
-  uint256[2] internal publicKey2;
-  string internal constant SIGNER_1 = "1";
-  string internal constant SIGNER_2 = "2";
+  address public owner = address(bytes20(bytes32(keccak256("defaultOwner"))));
+  address public user = address(bytes20(bytes32(keccak256("defaultReceiver"))));
+  address public relay = address(bytes20(bytes32(keccak256("defaultRelay"))));
+  string public mnemonic1 =
+    "test test test test test test test test test test test junk";
+  string public mnemonic2 =
+    "behave else rubber loan crumble clip squirrel deposit fix comic talent cover";
+  uint256 public privateKey1;
+  uint256 public privateKey2;
+  address public publicKey1;
+  address public publicKey2;
+
+  uint256 public constant SALT = 0x55;
 
   UniswapV2Factory public uniswapV2Factory;
-  UniswapV2Router02 public uniswapV2Router02;
+  UniswapV2Router02 public uniswapV2Router;
   UniswapV2Pair public uniswapV2Pair;
 
-  SimpleAccount public simpleAccount;
-  SimpleAccountFactory public simpleAccountFactory;
+  SimpleAccountFactory _simpleAccountFactory;
 
   function setUp() public {
+    privateKey1 = vm.deriveKey(mnemonic1, 0);
+    privateKey2 = vm.deriveKey(mnemonic2, 0);
+    publicKey1 = vm.addr(privateKey1);
+    publicKey2 = vm.addr(privateKey2);
+
     owner = vm.addr(1);
     vm.deal(owner, 10 ether);
 
     user = vm.addr(2);
     vm.deal(user, 10 ether);
-    // publicKey = createPublicKey(SIGNER_1);
-    // publicKey2 = createPublicKey(SIGNER_2);
 
     vm.startPrank(owner);
-    entryPoint = new EntryPoint();
-    entryPointAddress = address(entryPoint);
+    _entryPoint = new EntryPoint();
     token = new Token("TestToken", "TEST");
     weth = new WETH9();
     uniswapV2Factory = new UniswapV2Factory(owner);
-    uniswapV2Router02 = new UniswapV2Router02(
+    uniswapV2Router = new UniswapV2Router02(
       address(uniswapV2Factory),
       address(weth)
     );
@@ -61,57 +68,23 @@ contract UniswapTest is Test {
     vm.deal(owner, 10 ether);
 
     bytes memory payload = abi.encodeWithSignature("deposit()");
-    address(weth).call{value: 10 ether}(payload);
+    address(weth).call{value: 0.1 ether}(payload);
     require(weth.balanceOf(owner) > 0);
-    token.mint(address(owner), 10000000);
+    token.mint(address(owner), 10000_00000000000000000);
     token.transfer(owner, token.balanceOf(owner));
-    weth.transfer(owner, token.balanceOf(owner));
+    weth.transfer(owner, weth.balanceOf(owner));
     uniswapV2Pair.sync();
 
-    // address[2] memory path;
-    // path[0] = address(weth);
-    // path[1] = address(token);
-    // bytes memory payload2 = abi.encodeWithSignature("swapExactETHForTokensSupportingFeeOnTransferTokens(uint,address[],address,uint)",0,path,address(user),block.timestamp + 3600);
+    vm.deal(relay, 5 ether);
+    _entryPoint.depositTo{value: 5 ether}(relay);
+    vm.deal(relay, 5 ether);
 
-    // handler = new CompatibilityFallbackHandler();
-    // bytes memory ellipticLibraryByteCode =
-    //     abi.encodePacked(vm.getCode("FCL_Elliptic_ZZ.sol:FCL_Elliptic_ZZ"));
-    // address ellipticAddress;
-    // assembly {
-    //     ellipticAddress := create(0, add(ellipticLibraryByteCode, 0x20), mload(ellipticLibraryByteCode))
-    // }
-
-    // forumAccountSingleton = new ForumAccount(ellipticAddress);
-
-    // forumAccountFactory = new ForumAccountFactory(
-    // 	forumAccountSingleton,
-    // 	entryPointAddress,
-    // 	address(handler),
-    // 	hex'1584482fdf7a4d0b7eb9d45cf835288cb59e55b8249fff356e33be88ecc546d11d00000000',
-    // 	'{"type":"webauthn.get","challenge":"',
-    // 	'","origin":"https://development.forumdaos.com"}'
-    // );
-
-    // forumAccountAddress = forumAccountFactory.createForumAccount(publicKey);
-    // forumAccount = ForumAccount(forumAccountAddress);
-    // bytes memory _calldata = buildExecutionPayload(address(uniswapV2Router02), 0.2 ether, payload2, Enum.Operation.Call);
-
-    // vm.deal(address(forumAccount), 10 ether);
-    // bytes memory _initCode;
-    // UserOperation memory userop = buildUserOp(address(forumAccount), 0, _initCode, _calldata);
-    // UserOperation[1] memory userops;
-    // userops[0] = userop;
-
-    simpleAccountFactory = new SimpleAccountFactory(IEntryPoint(entryPoint));
+    _simpleAccountFactory = new SimpleAccountFactory(IEntryPoint(_entryPoint));
     vm.stopPrank();
 
-    //instance = new FDemo();
-    //dawnWalletFactory = new DawnWalletFactory();
+    vm.prank(relay);
+    _entryPoint.addStake{value: 5 ether}(3600);
   }
-
-  // -----------------------------------------------------------------------
-  // 4337 Helper Functions
-  // -----------------------------------------------------------------------
 
   UserOperation public userOpBase =
     UserOperation({
@@ -128,67 +101,86 @@ contract UniswapTest is Test {
       signature: new bytes(0)
     });
 
-  function buildUserOp(
-    address sender,
-    uint256 nonce,
-    bytes memory initCode,
-    bytes memory callData
-  ) public view returns (UserOperation memory userOp) {
-    // Build on top of base op
-    userOp = userOpBase;
+  function testSwap() public {
+    UserOperation memory userOp = userOpBase;
+    bytes memory callData_;
+    bytes memory initCode_;
+    address sender_;
+    bytes32 userOpHash;
+    uint8 v;
+    bytes32 r;
+    bytes32 s;
+    UserOperation[] memory userOps = new UserOperation[](1);
+    uint256 newSize;
+    address newAddress;
 
-    // Add sender and calldata to op
-    userOp.sender = sender;
-    userOp.nonce = nonce;
-    userOp.initCode = initCode;
-    userOp.callData = callData;
-  }
+    sender_ = address(_simpleAccountFactory.createAccount(publicKey1, SALT));
 
-  // Build payload which the entryPoint will call on the sender 4337 account
-  // function buildExecutionPayload(
-  //   address to,
-  //   uint256 value,
-  //   bytes memory data,
-  //   Enum.Operation operation
-  // ) internal pure returns (bytes memory) {
-  //   return
-  //     abi.encodeWithSignature(
-  //       "executeAndRevert(address,uint256,bytes,uint8)",
-  //       to,
-  //       value,
-  //       data,
-  //       operation
-  //     );
-  // }
+    address[2] memory path;
+    path[0] = address(weth);
+    path[1] = address(token);
+    callData_ = abi.encodeWithSelector(UniswapV2Router02.swapExactTokensForETHSupportingFeeOnTransferTokens.selector,0,path,sender_,block.timestamp + 3600);
+    callData_ = abi.encodeWithSelector(SimpleAccount.execute.selector, address(uniswapV2Router), 0.01 ether, callData_);
 
-  // !!!!! combine with the above
-  // function signAndFormatUserOpIndividual(UserOperation memory userOp, string memory signer1)
-  //     internal
-  //     returns (UserOperation[] memory)
-  // {
-  //     userOp.signature =
-  //         abi.encode(signMessageForPublicKey(signer1, Base64.encode(abi.encodePacked(entryPoint.getUserOpHash(userOp)))));
+    userOp.sender = sender_;
+    userOp.initCode = initCode_;
+    userOp.callData = callData_; 
 
-  //     UserOperation[] memory userOpArray = new UserOperation[](1);
-  //     userOpArray[0] = userOp;
+    userOpHash = _entryPoint.getUserOpHash(userOp);
+    (v, r, s) = vm.sign(privateKey1, userOpHash.toEthSignedMessageHash());
+    userOp.signature = abi.encodePacked(r, s, v);
+    _entryPoint.depositTo{value: 1 ether}(sender_);
+    userOps[0] = (userOp);
 
-  //     return userOpArray;
-  // }
-
-  function testDeployWallets() public {
-    simpleAccount = simpleAccountFactory.createAccount(user, uint256(555));
-    //address simpleAccountAddress = simpleAccountFactory.getAddress(user, uint256(555));
-    vm.startPrank(user);
-    // Deploy Dawn Wallet
-    //address account = dawnWalletFactory.deployWallet(address(entryPoint), user, 555);
+    //
+    vm.startPrank(relay);
+    _entryPoint.handleOps(userOps, payable(address(uint160(uint256(6666)))));
     vm.stopPrank();
+    newAddress = sender_;
+    assembly {
+        newSize := extcodesize(newAddress)
+    }
   }
 
-  function testSimpleWallet() public {
-    vm.startPrank(user);
-    //address account = dawnWalletFactory.deployWallet(address(entryPoint), user, 555);
+  function testSwapWithInitCode() public {
+    UserOperation memory userOp = userOpBase;
+    bytes memory callData_;
+    bytes memory initCode_;
+    address sender_;
+    bytes32 userOpHash;
+    uint8 v;
+    bytes32 r;
+    bytes32 s;
+    UserOperation[] memory userOps = new UserOperation[](1);
+    uint256 newSize;
+    address newAddress;
+
+    initCode_ = abi.encodePacked(_simpleAccountFactory, abi.encodeWithSignature("createAccount(address,uint256)", publicKey2, SALT));
+    sender_ = address(_simpleAccountFactory.getAddress(publicKey2, SALT));
+
+    address[2] memory path;
+    path[0] = address(weth);
+    path[1] = address(token);
+    callData_ = abi.encodeWithSelector(UniswapV2Router02.swapExactTokensForETHSupportingFeeOnTransferTokens.selector,0,path,sender_,block.timestamp + 3600);
+    callData_ = abi.encodeWithSelector(SimpleAccount.execute.selector, address(uniswapV2Router), 0.01 ether, callData_);
+
+    userOp.sender = sender_;
+    userOp.initCode = initCode_;
+    userOp.callData = callData_; 
+
+    userOpHash = _entryPoint.getUserOpHash(userOp);
+    (v, r, s) = vm.sign(privateKey2, userOpHash.toEthSignedMessageHash());
+    userOp.signature = abi.encodePacked(r, s, v);
+    _entryPoint.depositTo{value: 1 ether}(sender_);
+    userOps[0] = (userOp);
+
+    //
+    vm.startPrank(relay);
+    _entryPoint.handleOps(userOps, payable(address(uint160(uint256(6666)))));
     vm.stopPrank();
+    newAddress = sender_;
+    assembly {
+        newSize := extcodesize(newAddress)
+    }
   }
-
-  function testSimpleAccountUniswapV2() public payable {}
 }

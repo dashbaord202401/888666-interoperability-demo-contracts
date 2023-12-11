@@ -38,16 +38,16 @@
 - [ ] make faucet upgradeable
 - [x] deploy paymaster and escrow
 - [x] deploy uniswapv2
-- [ ] create Token and USDT pairs
-- [ ] fund Token and USDT tokens
+- [x] create Token and USDT pairs
+- [x] fund Token and USDT tokens
 - [ ] deploy uniswapv3
 - [ ] deploy uniswapv4
 - [ ] script to test uniswapv3
 - [ ] script to test uniswapv4
 - [ ] script to test gearbox
-- [ ] add verify view function to drip
+- [x] add verify view function to drip
 - [ ] cleanup new paymaster/escrow (unused variables)
-- [ ] add 1271 to token escrow
+- [x] add 1271 to token escrow
 - [ ] add deployment costs to readme
 
 ### Faucets
@@ -57,7 +57,7 @@
 | Ethereum Sepolia | 0xa651484C43383f27ad98647ef434769796cC0Bc6 | 0x1448a1620170b28c561c41A7FAe5BEea71EFc7B9 | 0x50aB7C2597422ecc7083536dE93c5459E315CaC2 |
 | Polygon Mumbai   | 0xbD829426BF1c8A09C35F7d402D7a92894d22DC2F | 0xEF4Ca181511EF094cb6e14439cf33868aed1875B | 0xaCB3bc70A807fa1F5f36c80C7C2c0402d9341D5B |
 | Avalanche Fuji   | 0x199A199B680E61980d3DFB0c6D46754CF23Efb6f | 0x2FC38Afad493dB7a3049f0B8CB1a7d538C67f286 | 0x416e604EB518F126898a2f25e55A9Dd2E373B9C4 |
-| Polygon zkEVM    | 0x9100621e7b609138cC7E07035Ba476b249D42EA3 | 0x6dDD392833eC341da955bE9baC5Ab5aff69AF5d6 | 0x6A4e8C62544A707ea22fd9BdC8B40492a7f0e2aE
+| Polygon zkEVM    | 0x9100621e7b609138cC7E07035Ba476b249D42EA3 | 0x6dDD392833eC341da955bE9baC5Ab5aff69AF5d6 | 0x6A4e8C62544A707ea22fd9BdC8B40492a7f0e2aE |
 
 
 | Chain            | UniswapV2Factory                           | UniswapV2Router                            | WETH9                                      |
